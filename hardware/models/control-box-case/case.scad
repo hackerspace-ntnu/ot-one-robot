@@ -2,11 +2,13 @@ width = 8.2;
 length = 20.2;
 height = 14.5;
 thickness = 0.5;
-screwHoleRadius = 0.27;
+screwHoleRadius = 0.26;
 screwHolePadding = 0.25;
 powerButtonRadius = 0.8;
 powerConnectorRadius = 0.5;
 standOffHoleRadius = 0.29;
+fastenerScrewRadius = 0.33;
+addFastenerTop = true;
 
 // from https://gist.github.com/tinkerology/ae257c5340a33ee2f149ff3ae97d9826
 module roundedcube(xx, yy, height, radius) {
@@ -31,19 +33,19 @@ module front() {
         cube([thickness, width+thickness*2, height]);
         // space for the screws, seen from the front
         // bottom left
-        translate([0, width+screwHolePadding, screwHolePadding*1.5])
+        translate([0, width+screwHolePadding, screwHolePadding*1.75])
         rotate([0, 90, 0])      
         cylinder(r=screwHoleRadius, h=thickness, $fn=40);
         // bottom right
-        translate([0, thickness+screwHolePadding, screwHolePadding*1.5])
+        translate([0, thickness+screwHolePadding, screwHolePadding*1.75])
         rotate([0, 90, 0])      
         cylinder(r=screwHoleRadius, h=thickness, $fn=40);
         // top right
-        translate([0, width+screwHolePadding, height-screwHolePadding*1.5])
+        translate([0, width+screwHolePadding, height-screwHolePadding*1.75])
         rotate([0, 90, 0])      
         cylinder(r=screwHoleRadius, h=thickness, $fn=40);
         // top left
-        translate([0, thickness+screwHolePadding, height-screwHolePadding*1.5])
+        translate([0, thickness+screwHolePadding, height-screwHolePadding*1.75])
         rotate([0, 90, 0])      
         cylinder(r=screwHoleRadius, h=thickness, $fn=40);
         //connectors smoothieboard
@@ -142,9 +144,19 @@ module top() {
     difference() {
         cube([length+thickness*2, width+thickness*2, thickness]);
         translate([2, 1.5, 0])
-        roundedcube(7, 1.6, thickness, 0.2, $fn=40);
+        roundedcube(7.2, 1.8, thickness, 0.2, $fn=40);
         translate([11.5, 1.6, 0])
-        roundedcube(3, 2.5, thickness, 0.3, $fn=40);
+        roundedcube(3.2, 2.7, thickness, 0.3, $fn=40);
+    }
+    if (addFastenerTop) {
+        difference() {
+            translate([0, 0, thickness])
+            cube([length+thickness*2, 2*thickness, 3]);
+            translate([length/4, 2*thickness, 2]) rotate([90, 0, 0])
+            cylinder(r=fastenerScrewRadius, h=thickness*2, $fn=50);
+            translate([length*3/4, 2*thickness, 2]) rotate([90, 0, 0])
+            cylinder(r=fastenerScrewRadius, h=thickness*2, $fn=50);
+        }
     }
 }
 
@@ -155,12 +167,12 @@ module bottom() {
 
 translate([0, 0, thickness])
 front();
-translate([thickness, 0, thickness])
-right();
-translate([thickness, width+thickness, thickness])
-left();
+//translate([thickness, 0, thickness])
+//right();
+//translate([thickness, width+thickness, thickness])
+//left();
 translate([0, 0, height+thickness])
 top();
-translate([length+thickness, 0, 0])
-back();
+//translate([length+thickness, 0, 0])
+//back();
 bottom();
