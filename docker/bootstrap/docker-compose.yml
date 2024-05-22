@@ -1,0 +1,24 @@
+controller:
+  image: crossbar
+  tty: true
+  ports:
+    - "8080:8080"
+labware:
+  image: labware
+  environment:
+    - CROSSBAR_HOST=controller
+  links:
+    - controller
+driver:
+  environment:
+    - CROSSBAR_HOST=controller
+    - SMOOTHIE_SIMULATE=true
+  image: driver
+  links:
+    - controller
+frontend:
+  image: frontend
+  ports:
+    - "5000:5000"
+  links:
+    - controller
